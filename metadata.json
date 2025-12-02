@@ -1,0 +1,5 @@
+{
+  "name": "C4D Palette Studio",
+  "description": "A Color Hunt-inspired tool specifically for Cinema 4D 2025. Generate AI palettes and export them as ready-to-run Python scripts for C4D.",
+  "requestFramePermissions": []
+}
