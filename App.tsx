@@ -11,7 +11,6 @@ import { ALL_INITIAL_PALETTES, SUGGESTED_THEMES, CATEGORIES, TRANSLATIONS } from
 import { Palette, Language, Theme } from './types';
 
 function App() {
-  const [hasApiKey, setHasApiKey] = useState(false);
   const [palettes, setPalettes] = useState<Palette[]>(ALL_INITIAL_PALETTES);
   const [filteredPalettes, setFilteredPalettes] = useState<Palette[]>(ALL_INITIAL_PALETTES);
   const [selectedPalette, setSelectedPalette] = useState<Palette | null>(null);
@@ -26,31 +25,6 @@ function App() {
 
   const t = TRANSLATIONS[lang];
   const isDark = theme === 'dark';
-
-  // Check for API Key on mount
-  useEffect(() => {
-    const checkApiKey = async () => {
-      // @ts-ignore
-      if (window.aistudio && window.aistudio.hasSelectedApiKey) {
-        // @ts-ignore
-        const has = await window.aistudio.hasSelectedApiKey();
-        setHasApiKey(has);
-      } else {
-        // Fallback for environments without the bridge
-        setHasApiKey(true);
-      }
-    };
-    checkApiKey();
-  }, []);
-
-  const handleConnectApiKey = async () => {
-    // @ts-ignore
-    if (window.aistudio && window.aistudio.openSelectKey) {
-      // @ts-ignore
-      await window.aistudio.openSelectKey();
-      setHasApiKey(true);
-    }
-  };
 
   // Filter Logic
   useEffect(() => {
@@ -107,36 +81,6 @@ function App() {
       />
     </div>
   );
-
-  // Render Landing Page if no API Key
-  if (!hasApiKey) {
-    return (
-      <div className="flex h-screen w-full items-center justify-center relative overflow-hidden">
-        <Background />
-        <div className="relative z-10 bg-white/60 backdrop-blur-xl border border-white/50 shadow-2xl rounded-2xl p-10 max-w-md w-full text-center mx-4">
-          <div className="w-16 h-16 bg-gradient-to-tr from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center text-white font-bold text-2xl shadow-lg shadow-blue-500/30 mx-auto mb-6">
-            C4D
-          </div>
-          <h1 className="text-2xl font-bold text-gray-800 mb-2">{t.connectTitle}</h1>
-          <p className="text-gray-500 mb-8 leading-relaxed whitespace-pre-line">
-            {t.connectDesc}
-          </p>
-          
-          <button 
-            onClick={handleConnectApiKey}
-            className="w-full py-3.5 px-4 bg-gray-900 hover:bg-black text-white rounded-xl font-medium transition-all shadow-xl hover:shadow-2xl hover:-translate-y-0.5 active:scale-95 flex items-center justify-center gap-2"
-          >
-            <Key size={18} />
-            {t.connectBtn}
-          </button>
-          
-          <div className="mt-6 text-xs text-gray-400">
-             <a href="https://ai.google.dev/gemini-api/docs/billing" target="_blank" rel="noopener noreferrer" className="underline hover:text-gray-600">{t.billingHelp}</a>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className={`flex h-screen w-full overflow-hidden font-sans selection:bg-blue-500/30 ${isDark ? 'text-gray-100' : 'text-gray-800'}`}>
